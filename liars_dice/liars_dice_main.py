@@ -81,12 +81,16 @@ def liar_call(button_player,bid_player,bid):
         print(f"{bid_player.name} is a LIAR!\n")
         in_play = bid_player.drop_dice()
         if not in_play:
+            button = game.players.index(bid_player)
             game.drop_player(bid_player.number)
+            return button
+        return game.players.index(bid_player)
     else:
         print(f"{button_player.name} is the liar!\n")
         in_play = button_player.drop_dice()
         if not in_play:
             game.drop_player(button_player.number)
+            return game.players.index(bid_player)
 
 
 
@@ -116,14 +120,14 @@ while True:
         while game.round:
             # increment the button first, so that it doesn't if the round is over
             button += 1
-            if button == len(game.players):
+            if button >= len(game.players):
                 button = 0
             player_prep(game.players[button])
             if game.players[button].user:
                 show_table(game.players[button].number)
-            bid = game.players[button].choice(bid)
+            bid = game.players[button].choice(bid,game.dice_in_play())
             if bid[0] == "liar":
-                liar_call(game.players[button],game.players[button-1],(bid[1],bid[2]))
+                button = liar_call(game.players[button],game.players[button-1],(bid[1],bid[2]))
                 game.round = False
             else:
                 if game.players[button].user:

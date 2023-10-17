@@ -1,6 +1,7 @@
 import random as rn
 from statistics import mode
 from math import floor
+from math import ceil
 
 class Player:
     # init method(self, name, number)
@@ -18,7 +19,7 @@ class Player:
         return len(self.dice)
 
     # method choice(self)
-    def choice(self,last_bid):
+    def choice(self,last_bid,dice_in_play):
         while True:
             # get input from the player
             if last_bid[0] > 0:
@@ -66,6 +67,10 @@ class AI_player(Player):
 
         self.user = False
 
+    # method choice(self, last_bid)
+    def choice(self, last_bid, dice_in_play):
+        return self.full_ai(last_bid,dice_in_play)
+
     def simple_ai(self, last_bid):
         choice_list = [(last_bid[0]+1,last_bid[1]),
                        (last_bid[0]+1,last_bid[1]),
@@ -78,35 +83,57 @@ class AI_player(Player):
                   f"{bid[1]}{'s' if bid[0] > 1 else ''}")
         else:
             print(f'{self.name} says "LAIR!"')
-        stop = input("Aye! >")
+        input("Aye! >")
         return bid
 
-    # method choice(self, last_bid)
-    def choice(self, last_bid):
-        return self.simple_ai(last_bid)
-
-        # dice_in_play = 0
-        # for each player
-            # add len(player.dice) to dice_in_play
+    def full_ai(self, last_bid, dice_in_play):
+        pass
+        if last_bid == (0,0):
+            last_bid = (1,mode(self.dice))
         # hidden_dice = dice_in_play - len(self.dice)
+        hidden_dice = dice_in_play - len(self.dice)
         # safe_bid = (hidden_dice/6 round up) - 1 + self.dice where dice = bidface
+        safe_bid = floor(hidden_dice/6) + len([x for x in self.dice if x == last_bid[1]])
+        bid_raise = floor(safe_bid * 0.6)
         # risky_bid = (safe_bid + 16%) round up
+        risky_bid = ceil(self.dice/safe_bid)
         # if bid[0] is more than hidden_dice
+        if last_bid[0] > hidden_dice:
             # return ("liar","liar")
+            return ("liar",last_bid[0],last_bid[1])
         # if bid[0] is less than or equal to safe_bid
+        if last_bid[0] <= safe_bid:
             # build a choice_list: [bid[0] + 1, face=face,
                                    #bid[0] + 1, face=mode(self.dice),
                                    #bid[0] + 1,face=mode(self.dice)
-                                   # ]
+            choice_list = [(last_bid[0]+bid_raise, last_bid[1]),
+                           (last_bid[0]+bid_raise, last_bid[1]),
+                           (last_bid[0]+bid_raise, last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1])]
         # if bid is less than risky_bid
+        if last_bid[0] < risky_bid:
             # build a choice_list: ["liar",
                                    #bid[0] + 1, face=face,
                                    #bid[0] + 1, face=mode of self.dice,
                                    #bid[0] + 1, face=mode of self.dice,
                                    #bid[0] + 1, face=mode of self.dice
-                                   # ]
+            choice_list = [(last_bid[0]+1, last_bid[1]),
+                            ("liar",last_bid[0],last_bid[1]),
+                            ("liar",last_bid[0],last_bid[1]),
+                            ("liar",last_bid[0],last_bid[1])]
         # else
+        else:
             # build a choice_list: ["liar" x10,
                                    #bid[0] + 1, face=mode of self,dice
-                                   # ]
+            choice_list = [("liar",last_bid[0],last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1]),
+                           ("liar",last_bid[0],last_bid[1]),
+                            ("liar",last_bid[0],last_bid[1]),
+                            (last_bid[0]+1, last_bid[1])]
+
         # return rn.choice(choice_list)
+        return rn.choice(choice_list)

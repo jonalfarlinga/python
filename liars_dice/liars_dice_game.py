@@ -28,3 +28,10 @@ class Game:
             if player_number == self.player[i].number:
                 print(f"{self.player[i].name} has been knocked out of the game!\n")
                 self.players.pop(i)
+
+    def dice_in_play(self):
+        dice = 0
+        for player in self.players:
+            for die in player.dice:
+                dice += 1
+        return dice
