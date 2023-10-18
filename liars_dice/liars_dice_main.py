@@ -109,16 +109,18 @@ while True:
 
     player_list = get_players()
     game = ldg.Game(player_list)
-
+    button = -1
+    
     # gameplay loop
     while not game.game_over:
         game.roll_the_bones()
 
         game.round = True
-        button = -1
+
         bid = (0,0)
         while game.round:
-            # increment the button first, so that it doesn't if the round is over
+            # increment the button first, so that it doesn't if
+            # the round is over
             button += 1
             if button >= len(game.players):
                 button = 0
