@@ -87,16 +87,19 @@ class AI_player(Player):
         return bid
 
     def full_ai(self, last_bid, dice_in_play):
-        pass
         if last_bid == (0,0):
-            last_bid = (1,mode(self.dice))
+            last_bid = (0,mode(self.dice))
         # hidden_dice = dice_in_play - len(self.dice)
         hidden_dice = dice_in_play - len(self.dice)
         # safe_bid = (hidden_dice/6 round up) - 1 + self.dice where dice = bidface
-        safe_bid = floor(hidden_dice/6) + len([x for x in self.dice if x == last_bid[1]])
-        bid_raise = floor(safe_bid * 0.6)
+        safe_bid = floor(hidden_dice / 6) + len([x for x in self.dice if x == last_bid[1]])
+        if safe_bid > 0:
+            bid_raise = ceil(len(self.dice)/safe_bid)
+        else:
+            bid_raise = 1
+        print('')
         # risky_bid = (safe_bid + 16%) round up
-        risky_bid = ceil(self.dice/safe_bid)
+        risky_bid = ceil(safe_bid+safe_bid*.16)
         # if bid[0] is more than hidden_dice
         if last_bid[0] > hidden_dice:
             # return ("liar","liar")
@@ -105,13 +108,14 @@ class AI_player(Player):
         if last_bid[0] <= safe_bid:
             # build a choice_list: [bid[0] + 1, face=face,
                                    #bid[0] + 1, face=mode(self.dice),
-                                   #bid[0] + 1,face=mode(self.dice)
-            choice_list = [(last_bid[0]+bid_raise, last_bid[1]),
+                                   #bid[0] + 1,face=mode(self.dice
+            choice_list = [(last_bid[0]+bid_raise*2, last_bid[1]),
                            (last_bid[0]+bid_raise, last_bid[1]),
                            (last_bid[0]+bid_raise, last_bid[1]),
-                           ("liar",last_bid[0],last_bid[1])]
+                           #("liar",last_bid[0],last_bid[1])
+                           ]
         # if bid is less than risky_bid
-        if last_bid[0] < risky_bid:
+        elif last_bid[0] < risky_bid:
             # build a choice_list: ["liar",
                                    #bid[0] + 1, face=face,
                                    #bid[0] + 1, face=mode of self.dice,
@@ -134,6 +138,11 @@ class AI_player(Player):
                            ("liar",last_bid[0],last_bid[1]),
                             ("liar",last_bid[0],last_bid[1]),
                             (last_bid[0]+1, last_bid[1])]
-
-        # return rn.choice(choice_list)
-        return rn.choice(choice_list)
+        bid = rn.choice(choice_list)
+        if bid[0] != "liar":
+            print(f"{self.name} bids {bid[0]} "+
+                  f"{bid[1]}{'s' if bid[0] > 1 else ''}")
+        else:
+            print(f'{self.name} says "LAIR!"')
+        input("Aye! >")
+        return bid

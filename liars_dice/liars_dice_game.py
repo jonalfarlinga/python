@@ -25,9 +25,10 @@ class Game:
 
     def drop_player(self, player_number):
         for i in range(len(self.players)):
-            if player_number == self.player[i].number:
-                print(f"{self.player[i].name} has been knocked out of the game!\n")
-                self.players.pop(i)
+            if player_number == self.players[i].number:
+                pop = i
+        print(f"{self.players[pop].name} has been knocked out of the game!\n")
+        self.players.pop(pop)
 
     def dice_in_play(self):
         dice = 0

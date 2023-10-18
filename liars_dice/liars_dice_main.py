@@ -30,7 +30,7 @@ def get_players():
     safe = False
     while safe == False:
         num_users = input("How many humans are playing? (0-6)\n>")
-        if num_users.isdigit() and 1 <= int(num_users) <= 6:
+        if num_users.isdigit() and 0 <= int(num_users) <= 6:
             num_users = int(num_users)
             safe = True
         else:
@@ -40,7 +40,7 @@ def get_players():
     safe = False
     while safe == False:
         num_ai = input("How many pirates AARRR joining the game? (0-6)\n>")
-        if num_ai.isdigit() and 1 <= int(num_ai) <= 6:
+        if num_ai.isdigit() and 0 <= int(num_ai) <= 6:
             num_ai = int(num_ai)
             safe = True
         else:
@@ -58,7 +58,7 @@ def get_players():
     return player_list
 
 def player_prep(button):
-    input(f"Player {button.number} turn:" +
+    input(f"\nPlayer {button.number} turn:" +
           f" If ye ain't {button.name}, look away!\n>")
 
 def show_table(button_number):
@@ -90,7 +90,7 @@ def liar_call(button_player,bid_player,bid):
         in_play = button_player.drop_dice()
         if not in_play:
             game.drop_player(button_player.number)
-            return game.players.index(bid_player)
+            return game.players.index(button_player)
 
 
 
@@ -132,6 +132,9 @@ while True:
             else:
                 if game.players[button].user:
                     system('cls')
+            if len(game.players) == 1:
+                game.game_over = True
+                print(f"\n{game.players[0].name} is the winner!")
 
     # ask to play again
     # in "N" break main loop

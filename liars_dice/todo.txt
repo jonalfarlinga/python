@@ -1,0 +1,4 @@
+1 - add function/method commentary
+2 - draw system diagram
+3 - add option to read the rules
+4 - change the player_prep statement based on player.user
