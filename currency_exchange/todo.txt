@@ -1,0 +1,5 @@
+make downloading rates callable
+create rates class?
+create "Main Menu"
+option to reverse last exchange - found 1 USD to AUD, now print 1 AUD to USD
+

@@ -1,0 +1,45 @@
+{
+    "workbench.tree.indent": 20,
+    "explorer.compactFolders": false,
+    "workbench.editor.labelFormat": "short",
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "files.insertFinalNewline": true,
+    "files.autoSave": "afterDelay",
+    "workbench.colorTheme": "Vaporizer Cyber Neon 3 Dark",
+    "workbench.iconTheme": "sweet-vscode-icons",
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+                {
+                    "name": "The gold Color I Picked",
+                    "scope": [
+                        "comment"
+                    ],
+                    "settings": {
+                        "foreground": "#ce79ff",
+                    }
+                },
+                {
+                    "name": "The # Color I Picked",
+                    "scope": [
+                        "punctuation.definition.comment.python"
+                    ],
+                    "settings": {
+                        "foreground": "#ce79ff",
+                    }
+                },
+                {
+                    "name":"constant color",
+                    "scope": [
+                        "constant.numeric",
+                    ],
+                    "settings": {
+                        "foreground":"#ff0000"
+                    }
+                }
+        ]
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "git.openRepositoryInParentFolders": "never",
+
+}
