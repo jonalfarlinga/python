@@ -14,7 +14,7 @@ class Game:
 
     def roll_the_bones(self):
         '''
-        causes all players to roll their dice.
+        causes all players generate a new sequence of random numbers
         '''
         print("\n************************\n" +
               "**Now, ye scurvy dogs,**\n" +
@@ -24,6 +24,9 @@ class Game:
             player.roll_cup()
 
     def drop_player(self, player_number):
+        '''
+        removes a player according to the Player.number
+        '''
         for i in range(len(self.players)):
             if player_number == self.players[i].number:
                 pop = i
@@ -31,6 +34,10 @@ class Game:
         self.players.pop(pop)
 
     def dice_in_play(self):
+        '''
+        counts the number of dice in all players' dice cups
+        returns int
+        '''
         dice = 0
         for player in self.players:
             for die in player.dice:

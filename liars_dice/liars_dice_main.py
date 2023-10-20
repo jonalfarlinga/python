@@ -4,6 +4,13 @@ from os import system
 
 # method get_dice(self, pov=None)
 def get_dice(pov = None):
+    '''
+    returns a dictionary containing Player.number as keys and
+        lists of the player's dice as values
+    if pov == None, returns all dice indicated by "■"
+    if pov == int, returns that player's dice as ints, and other players' as "■"
+    if pov == "A", returns all dice as ints
+    '''
     # dice_cups = {}
     dice_cups = {}
     # for each player
@@ -27,6 +34,11 @@ def get_dice(pov = None):
     return dice_cups
 
 def get_players():
+    '''
+    asks the user for how many users are playing, how many AIs to add, and the names of Users
+    instantiates players according to the inputs
+    returns a list containing Players and AI_players
+    '''
     safe = False
     while safe == False:
         num_users = input("How many humans are playing? (0-6)\n>")
@@ -58,16 +70,31 @@ def get_players():
     return player_list
 
 def player_prep(button):
+    '''
+    takes a player who is on the button
+    instructs users to look away if not on the button
+    asks for input the acknowledge.
+    '''
     input(f"\nPlayer {button.number} turn:" +
           f" If ye ain't {button.name}, look away!\n>")
 
 def show_table(button_number):
+    '''
+    takes the player.number of the button player
+    prints the table from that player's pov
+    '''
     dice = get_dice(button_number)
     for player in game.players:
         print("\n\n"+ f"Player {player.number}: {player.name} has {len(player.dice)} dice.")
         print(dice[player.number],"\n")
 
 def liar_call(button_player,bid_player,bid):
+    '''
+    takes the player on the button, the previous bidding player, and the last bid
+    evaluates to truth of the liar claim
+    the LIAR loses a die from their cup and gets dropped if dice == 0
+    returns the game.players.index of the LIAR
+    '''
     print("     ** LIAR IS CALLED **")
     print(f"Bid is {bid[0]} {bid[1]}{'s' if bid[0]>1 else ''}")
     show_table("A")
@@ -100,7 +127,10 @@ def liar_call(button_player,bid_player,bid):
 
 
 
-# main loop
+'''
+MAIN LOOP
+continues until the game encounters "break"
+'''
 while True:
     print("\n\n\n\n\n\n\n\n"+
           "-------------------\n"+
@@ -110,30 +140,38 @@ while True:
     player_list = get_players()
     game = ldg.Game(player_list)
     button = -1
-    
+
     # gameplay loop
     while not game.game_over:
-        game.roll_the_bones()
+        if game.players == []: break     # if the player_list is empty, break the loop
 
+        game.roll_the_bones()            # begin the round by rolling the players' dice
+        # set round status variables
         game.round = True
-
         bid = (0,0)
+
+        # game round loop
         while game.round:
-            # increment the button first, so that it doesn't if
-            # the round is over
+            # increment the button first, so that it doesn't if the round == False
             button += 1
+
             if button >= len(game.players):
                 button = 0
+
             player_prep(game.players[button])
+
             if game.players[button].user:
                 show_table(game.players[button].number)
+
             bid = game.players[button].choice(bid,game.dice_in_play())
+
             if bid[0] == "liar":
                 button = liar_call(game.players[button],game.players[button-1],(bid[1],bid[2]))
                 game.round = False
             else:
                 if game.players[button].user:
                     system('cls')
+
             if len(game.players) == 1:
                 game.game_over = True
                 print(f"\n{game.players[0].name} is the winner!")

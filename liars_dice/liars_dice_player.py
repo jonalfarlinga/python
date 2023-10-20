@@ -20,6 +20,11 @@ class Player:
 
     # method choice(self)
     def choice(self,last_bid,dice_in_play):
+        '''
+        takes last_bid and dice_in_play (dice_in_play is for compatibility with AI_player.choice())
+        gets the player's bid
+        returns a tuple ("liar", bid, face) where liar is optional
+        '''
         while True:
             # get input from the player
             if last_bid[0] > 0:
@@ -50,6 +55,9 @@ class Player:
 
     # method roll_cup(self)
     def roll_cup(self):
+        '''
+        assigns a new set of random numbers to each position in player.dice
+        '''
         # for each die in dice:
         for i in range(len(self.dice)):
             # change the die to randint(1,6)
@@ -64,14 +72,19 @@ class AI_player(Player):
                 }
         ran_name = rn.choice(names['first']) + " " + rn.choice(names['last'])
         super().__init__(ran_name, number)
-
         self.user = False
 
     # method choice(self, last_bid)
     def choice(self, last_bid, dice_in_play):
+        '''
+        takes a bid and dice_in_play and passes them to the currently active ai choice() function
+        '''
         return self.full_ai(last_bid,dice_in_play)
 
     def simple_ai(self, last_bid):
+        '''
+        simple ai making a random choice of bidding higher or calling LIAR
+        '''
         choice_list = [(last_bid[0]+1,last_bid[1]),
                        (last_bid[0]+1,last_bid[1]),
                        (last_bid[0]+1,last_bid[1]),
@@ -87,6 +100,15 @@ class AI_player(Player):
         return bid
 
     def full_ai(self, last_bid, dice_in_play):
+        '''
+        more complicated AI.
+        Defines a safe_bid as 1/6 of hidden dice + all the dice in the AI_player.dice with
+        faces matching the current bid.
+        Defines a bid_raise as AI_player.dice / safe_bid
+        Defines a risky_bid as 16% higher than safe_bid
+        random choice lists built according riskiness of the last_bid
+        if the last_bid > hidden_dice, computer always calls liar
+        '''
         if last_bid == (0,0):
             last_bid = (0,mode(self.dice))
         # hidden_dice = dice_in_play - len(self.dice)
